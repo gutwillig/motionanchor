@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>NSLocalNetworkUsageDescription</key>
+    <string>MotionAnchor needs local network access to connect to your iPhone.</string>
+    <key>NSBonjourServices</key>
+    <array>
+        <string>_motionanchor._tcp</string>
+        <string>_motionanchor._udp</string>
+    </array>
+</dict>
+</plist>

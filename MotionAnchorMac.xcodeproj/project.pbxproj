@@ -6,8 +6,53 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		E700077C2F40222A007857B3 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70007792F40222A007857B3 /* Constants.swift */; };
+		E700077D2F40222A007857B3 /* AppearanceTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70007722F40222A007857B3 /* AppearanceTab.swift */; };
+		E700077E2F40222A007857B3 /* GeneralTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70007742F40222A007857B3 /* GeneralTab.swift */; };
+		E700077F2F40222A007857B3 /* MotionTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70007762F40222A007857B3 /* MotionTab.swift */; };
+		E70007802F40222A007857B3 /* MotionToVisualMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70007682F40222A007857B3 /* MotionToVisualMapper.swift */; };
+		E70007812F40222A007857B3 /* OverlayWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70007702F40222A007857B3 /* OverlayWindow.swift */; };
+		E70007822F40222A007857B3 /* ConnectionTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70007732F40222A007857B3 /* ConnectionTab.swift */; };
+		E70007832F40222A007857B3 /* DotRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E700076F2F40222A007857B3 /* DotRenderer.swift */; };
+		E70007842F40222A007857B3 /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70007752F40222A007857B3 /* MenuBarView.swift */; };
+		E70007852F40222A007857B3 /* UserDefaults+Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = E700077A2F40222A007857B3 /* UserDefaults+Settings.swift */; };
+		E70007862F40222A007857B3 /* PreferencesWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70007772F40222A007857B3 /* PreferencesWindow.swift */; };
+		E70007872F40222A007857B3 /* MotionDataDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E700076B2F40222A007857B3 /* MotionDataDecoder.swift */; };
+		E70007882F40222A007857B3 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70007642F40222A007857B3 /* AppState.swift */; };
+		E70007892F40222A007857B3 /* MotionDataProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70007672F40222A007857B3 /* MotionDataProcessor.swift */; };
+		E700078A2F40222A007857B3 /* MotionAnchorApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70007652F40222A007857B3 /* MotionAnchorApp.swift */; };
+		E700078B2F40222A007857B3 /* PeerConnectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E700076C2F40222A007857B3 /* PeerConnectionManager.swift */; };
+		E700078C2F40222A007857B3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70007632F40222A007857B3 /* AppDelegate.swift */; };
+		E700078D2F40222A007857B3 /* DotLayoutManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E700076E2F40222A007857B3 /* DotLayoutManager.swift */; };
+		E700078E2F40222A007857B3 /* SimulatedMotion.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70007692F40222A007857B3 /* SimulatedMotion.swift */; };
+		E70007922F4022B6007857B3 /* MotionPacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = E700078F2F4022B6007857B3 /* MotionPacket.swift */; };
+		E70007932F4022B6007857B3 /* NetworkConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70007902F4022B6007857B3 /* NetworkConstants.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		E70006D92F40135A007857B3 /* MotionAnchorMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MotionAnchorMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E70007632F40222A007857B3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		E70007642F40222A007857B3 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		E70007652F40222A007857B3 /* MotionAnchorApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionAnchorApp.swift; sourceTree = "<group>"; };
+		E70007672F40222A007857B3 /* MotionDataProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionDataProcessor.swift; sourceTree = "<group>"; };
+		E70007682F40222A007857B3 /* MotionToVisualMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionToVisualMapper.swift; sourceTree = "<group>"; };
+		E70007692F40222A007857B3 /* SimulatedMotion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulatedMotion.swift; sourceTree = "<group>"; };
+		E700076B2F40222A007857B3 /* MotionDataDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionDataDecoder.swift; sourceTree = "<group>"; };
+		E700076C2F40222A007857B3 /* PeerConnectionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerConnectionManager.swift; sourceTree = "<group>"; };
+		E700076E2F40222A007857B3 /* DotLayoutManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DotLayoutManager.swift; sourceTree = "<group>"; };
+		E700076F2F40222A007857B3 /* DotRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DotRenderer.swift; sourceTree = "<group>"; };
+		E70007702F40222A007857B3 /* OverlayWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayWindow.swift; sourceTree = "<group>"; };
+		E70007722F40222A007857B3 /* AppearanceTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceTab.swift; sourceTree = "<group>"; };
+		E70007732F40222A007857B3 /* ConnectionTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionTab.swift; sourceTree = "<group>"; };
+		E70007742F40222A007857B3 /* GeneralTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralTab.swift; sourceTree = "<group>"; };
+		E70007752F40222A007857B3 /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
+		E70007762F40222A007857B3 /* MotionTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionTab.swift; sourceTree = "<group>"; };
+		E70007772F40222A007857B3 /* PreferencesWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesWindow.swift; sourceTree = "<group>"; };
+		E70007792F40222A007857B3 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		E700077A2F40222A007857B3 /* UserDefaults+Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Settings.swift"; sourceTree = "<group>"; };
+		E700078F2F4022B6007857B3 /* MotionPacket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionPacket.swift; sourceTree = "<group>"; };
+		E70007902F4022B6007857B3 /* NetworkConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkConstants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -32,6 +77,13 @@
 		E70006D02F40135A007857B3 = {
 			isa = PBXGroup;
 			children = (
+				E70007912F4022B6007857B3 /* Shared */,
+				E70007662F40222A007857B3 /* App */,
+				E700076A2F40222A007857B3 /* Motion */,
+				E700076D2F40222A007857B3 /* Networking */,
+				E70007712F40222A007857B3 /* Overlay */,
+				E70007782F40222A007857B3 /* UI */,
+				E700077B2F40222A007857B3 /* Utilities */,
 				E70006DB2F40135A007857B3 /* MotionAnchorMac */,
 				E70006DA2F40135A007857B3 /* Products */,
 			);
@@ -43,6 +95,76 @@
 				E70006D92F40135A007857B3 /* MotionAnchorMac.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		E70007662F40222A007857B3 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				E70007632F40222A007857B3 /* AppDelegate.swift */,
+				E70007642F40222A007857B3 /* AppState.swift */,
+				E70007652F40222A007857B3 /* MotionAnchorApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		E700076A2F40222A007857B3 /* Motion */ = {
+			isa = PBXGroup;
+			children = (
+				E70007672F40222A007857B3 /* MotionDataProcessor.swift */,
+				E70007682F40222A007857B3 /* MotionToVisualMapper.swift */,
+				E70007692F40222A007857B3 /* SimulatedMotion.swift */,
+			);
+			path = Motion;
+			sourceTree = "<group>";
+		};
+		E700076D2F40222A007857B3 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				E700076B2F40222A007857B3 /* MotionDataDecoder.swift */,
+				E700076C2F40222A007857B3 /* PeerConnectionManager.swift */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
+		E70007712F40222A007857B3 /* Overlay */ = {
+			isa = PBXGroup;
+			children = (
+				E700076E2F40222A007857B3 /* DotLayoutManager.swift */,
+				E700076F2F40222A007857B3 /* DotRenderer.swift */,
+				E70007702F40222A007857B3 /* OverlayWindow.swift */,
+			);
+			path = Overlay;
+			sourceTree = "<group>";
+		};
+		E70007782F40222A007857B3 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				E70007722F40222A007857B3 /* AppearanceTab.swift */,
+				E70007732F40222A007857B3 /* ConnectionTab.swift */,
+				E70007742F40222A007857B3 /* GeneralTab.swift */,
+				E70007752F40222A007857B3 /* MenuBarView.swift */,
+				E70007762F40222A007857B3 /* MotionTab.swift */,
+				E70007772F40222A007857B3 /* PreferencesWindow.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		E700077B2F40222A007857B3 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				E70007792F40222A007857B3 /* Constants.swift */,
+				E700077A2F40222A007857B3 /* UserDefaults+Settings.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		E70007912F4022B6007857B3 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				E700078F2F4022B6007857B3 /* MotionPacket.swift */,
+				E70007902F4022B6007857B3 /* NetworkConstants.swift */,
+			);
+			path = Shared;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -119,6 +241,27 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E700077C2F40222A007857B3 /* Constants.swift in Sources */,
+				E700077D2F40222A007857B3 /* AppearanceTab.swift in Sources */,
+				E700077E2F40222A007857B3 /* GeneralTab.swift in Sources */,
+				E70007922F4022B6007857B3 /* MotionPacket.swift in Sources */,
+				E70007932F4022B6007857B3 /* NetworkConstants.swift in Sources */,
+				E700077F2F40222A007857B3 /* MotionTab.swift in Sources */,
+				E70007802F40222A007857B3 /* MotionToVisualMapper.swift in Sources */,
+				E70007812F40222A007857B3 /* OverlayWindow.swift in Sources */,
+				E70007822F40222A007857B3 /* ConnectionTab.swift in Sources */,
+				E70007832F40222A007857B3 /* DotRenderer.swift in Sources */,
+				E70007842F40222A007857B3 /* MenuBarView.swift in Sources */,
+				E70007852F40222A007857B3 /* UserDefaults+Settings.swift in Sources */,
+				E70007862F40222A007857B3 /* PreferencesWindow.swift in Sources */,
+				E70007872F40222A007857B3 /* MotionDataDecoder.swift in Sources */,
+				E70007882F40222A007857B3 /* AppState.swift in Sources */,
+				E70007892F40222A007857B3 /* MotionDataProcessor.swift in Sources */,
+				E700078A2F40222A007857B3 /* MotionAnchorApp.swift in Sources */,
+				E700078B2F40222A007857B3 /* PeerConnectionManager.swift in Sources */,
+				E700078C2F40222A007857B3 /* AppDelegate.swift in Sources */,
+				E700078D2F40222A007857B3 /* DotLayoutManager.swift in Sources */,
+				E700078E2F40222A007857B3 /* SimulatedMotion.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -246,10 +389,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				ENABLE_APP_SANDBOX = YES;
+				ENABLE_APP_SANDBOX = NO;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MotionAnchorMac/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -288,10 +432,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				ENABLE_APP_SANDBOX = YES;
+				ENABLE_APP_SANDBOX = NO;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MotionAnchorMac/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
