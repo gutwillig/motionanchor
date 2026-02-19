@@ -15,7 +15,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        print("DEBUG: MotionAnchor Mac app started!")
+        print("DEBUG: RideSteady Mac app started!")
 
         // Initialize app state
         appState = AppState()
@@ -43,7 +43,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
 
         if let button = statusItem?.button {
-            button.image = NSImage(systemSymbolName: "waveform.circle", accessibilityDescription: "MotionAnchor")
+            button.image = NSImage(systemSymbolName: "waveform.circle", accessibilityDescription: "RideSteady")
         }
 
         // Create menu with delegate - rebuilds only when opened
@@ -121,6 +121,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         menu.addItem(NSMenuItem.separator())
 
+        // How it Works
+        let howItWorksItem = NSMenuItem(title: "How it Works...", action: #selector(openHowItWorks), keyEquivalent: "")
+        howItWorksItem.target = self
+        menu.addItem(howItWorksItem)
+
         // Preferences
         let prefsItem = NSMenuItem(title: "Preferences...", action: #selector(openPreferences), keyEquivalent: ",")
         prefsItem.target = self
@@ -129,7 +134,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         menu.addItem(NSMenuItem.separator())
 
         // Quit
-        let quitItem = NSMenuItem(title: "Quit MotionAnchor", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
+        let quitItem = NSMenuItem(title: "Quit RideSteady", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
         menu.addItem(quitItem)
     }
 
@@ -180,6 +185,26 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
+    @objc private func openHowItWorks() {
+        let alert = NSAlert()
+        alert.messageText = "How RideSteady Works"
+        alert.informativeText = """
+        RideSteady helps prevent motion sickness by displaying visual anchors that move with your vehicle.
+
+        To get started:
+        1. Download the RideSteady app on your iPhone
+        2. Place your iPhone in a stable position in your vehicle
+        3. On this Mac, click "Search for iPhone" in the menu bar
+        4. Connect to your iPhone when it appears
+        5. The particles on screen will move based on your vehicle's motion
+
+        The visual anchors help your brain reconcile what you see with what you feel, reducing motion sickness symptoms.
+        """
+        alert.alertStyle = .informational
+        alert.addButton(withTitle: "OK")
+        alert.runModal()
+    }
+
     @objc private func openPreferences() {
         guard let appState = appState else { return }
 
@@ -196,7 +221,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             backing: .buffered,
             defer: false
         )
-        preferencesWindow?.title = "MotionAnchor Preferences"
+        preferencesWindow?.title = "RideSteady Preferences"
         preferencesWindow?.contentView = NSHostingView(rootView: PreferencesWindow(appState: appState))
         preferencesWindow?.center()
         preferencesWindow?.makeKeyAndOrderFront(nil)

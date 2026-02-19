@@ -20,7 +20,7 @@ struct GeneralTab: View {
                         setDockIconVisibility(newValue)
                     }
 
-                Text("When disabled, MotionAnchor runs as a menu bar app only.")
+                Text("When disabled, RideSteady runs as a menu bar app only.")
                     .font(.caption)
                     .foregroundColor(.secondary)
             } header: {

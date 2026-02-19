@@ -154,7 +154,7 @@ struct MenuBarView: View {
                 NSApplication.shared.terminate(nil)
             } label: {
                 HStack {
-                    Text("Quit MotionAnchor")
+                    Text("Quit RideSteady")
                     Spacer()
                     Text("⌘Q")
                         .font(.caption)

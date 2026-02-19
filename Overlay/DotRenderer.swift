@@ -19,7 +19,13 @@ final class DotRenderer: ObservableObject {
 
     // MARK: - Settings
 
-    var particleCount: Int = 30
+    var particleCount: Int = 30 {
+        didSet {
+            if particleCount != oldValue {
+                particles.removeAll()  // Force re-initialization
+            }
+        }
+    }
     var particleSize: CGFloat = 30
     var particleColor: NSColor = .white
     var maxOpacity: CGFloat = 0.6
@@ -235,7 +241,8 @@ final class DotRenderer: ObservableObject {
             let distFromCenter = max(distFromCenterX, distFromCenterY)
 
             // Scale size based on distance (smaller near center)
-            let sizeScale = max(0.2, min(1.0, distFromCenter * 1.5))
+            // Range: 50% at center to 100% at edge, with squared falloff for more dramatic effect
+            let sizeScale = 0.5 + 0.5 * distFromCenter * distFromCenter
             let currentSize = particleSize * sizeScale
 
             let color = particleColor.withAlphaComponent(particle.opacity)

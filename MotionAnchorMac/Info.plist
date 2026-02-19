@@ -2,8 +2,14 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+    <key>CFBundleDisplayName</key>
+    <string>RideSteady</string>
+    <key>CFBundleIconName</key>
+    <string>AppIcon</string>
+    <key>LSApplicationCategoryType</key>
+    <string>public.app-category.lifestyle</string>
     <key>NSLocalNetworkUsageDescription</key>
-    <string>MotionAnchor needs local network access to connect to your iPhone.</string>
+    <string>RideSteady needs local network access to connect to your iPhone.</string>
     <key>NSBonjourServices</key>
     <array>
         <string>_motionanchor._tcp</string>

@@ -40,18 +40,27 @@ final class AppState: ObservableObject {
         // Connect dotRenderer to overlayManager so dots can be drawn
         overlayManager.setDotRenderer(dotRenderer)
 
-        // SIMPLIFIED: Direct motion to dots, skip MotionDataProcessor
+        // Motion processing with configurable settings
         connectionManager.onMotionPacketReceived = { [weak self] packet in
             guard let self = self else { return }
             self.packetCount += 1
 
-            // Direct mapping: acceleration -> dot offset (simple multiplier)
-            let gain: CGFloat = 200  // pixels per g-force
-            let offsetX = CGFloat(-packet.userAcceleration.x) * gain
-            let offsetY = CGFloat(-packet.userAcceleration.y) * gain
+            // Dead zone threshold - ignore tiny movements (noise)
+            let deadZone: Double = 0.015  // ~0.015g threshold
+            let accelX = abs(packet.userAcceleration.x) < deadZone ? 0 : packet.userAcceleration.x
+            let accelY = abs(packet.userAcceleration.y) < deadZone ? 0 : packet.userAcceleration.y
 
-            // Clamp to reasonable range
-            let maxOffset: CGFloat = 100
+            // Use motion processor settings
+            let sensitivity = self.motionProcessor.sensitivityMultiplier
+            let lateralGain = CGFloat(self.motionProcessor.lateralGain) * CGFloat(sensitivity)
+            let longitudinalGain = CGFloat(self.motionProcessor.longitudinalGain) * CGFloat(sensitivity)
+            let maxOffset = self.motionProcessor.maxDisplacement
+
+            // Map acceleration to dot offset
+            let offsetX = CGFloat(-accelX) * lateralGain
+            let offsetY = CGFloat(-accelY) * longitudinalGain
+
+            // Clamp to max displacement
             self.dotRenderer.currentOffset = CGPoint(
                 x: max(-maxOffset, min(maxOffset, offsetX)),
                 y: max(-maxOffset, min(maxOffset, offsetY))
