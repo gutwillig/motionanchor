@@ -29,6 +29,10 @@ final class PeerConnectionManager: NSObject, ObservableObject {
     // Last connected peer for auto-reconnect
     @AppStorage("lastConnectedPeerName") private var lastConnectedPeerName: String = ""
 
+    // Reconnection tracking
+    private var reconnectionAttempts = 0
+    private let maxReconnectionAttempts = 3
+
     // Callbacks
     var onMotionPacketReceived: ((MotionPacket) -> Void)?
     var onConnectionStateChanged: ((ConnectionState) -> Void)?
@@ -227,6 +231,9 @@ extension PeerConnectionManager: MCSessionDelegate {
                 self.connectionState = .connected
                 self.onConnectionStateChanged?(.connected)
 
+                // Reset reconnection counter on successful connection
+                self.reconnectionAttempts = 0
+
                 // Stop browsing once connected
                 self.browser.stopBrowsingForPeers()
 
@@ -238,6 +245,8 @@ extension PeerConnectionManager: MCSessionDelegate {
             case .notConnected:
                 print("DEBUG: Not connected / disconnected from peer")
                 if self.connectionState == .connected || self.connectionState == .streaming {
+                    print("DEBUG: Connection was active, attempting to reconnect...")
+
                     // Connection was lost
                     self.connectionState = .reconnecting
                     self.onConnectionStateChanged?(.reconnecting)
@@ -247,18 +256,54 @@ extension PeerConnectionManager: MCSessionDelegate {
                     self.inputStream = nil
                     self.streamBuffer.removeAll()
 
+                    // Create fresh session to avoid stale state
+                    self.session.disconnect()
+                    self.session = MCSession(
+                        peer: self.peerID,
+                        securityIdentity: nil,
+                        encryptionPreference: .none
+                    )
+                    self.session.delegate = self
+
                     // Resume browsing to find the peer again
                     self.discoveredPeers.removeAll()
+                    self.browser.stopBrowsingForPeers()
                     self.browser.startBrowsingForPeers()
                     print("DEBUG: Started browsing for reconnection")
 
-                    // Timeout for reconnection
-                    DispatchQueue.main.asyncAfter(deadline: .now() + NetworkConstants.reconnectionTimeoutSeconds) {
+                    // Increment attempt counter
+                    self.reconnectionAttempts += 1
+                    print("DEBUG: Reconnection attempt \(self.reconnectionAttempts) of \(self.maxReconnectionAttempts)")
+
+                    // Timeout for this reconnection attempt
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 10.0) {
                         if self.connectionState == .reconnecting {
-                            print("DEBUG: Reconnection timeout")
-                            self.connectionState = .disconnected
-                            self.connectedPeerName = nil
-                            self.onConnectionStateChanged?(.disconnected)
+                            if self.reconnectionAttempts < self.maxReconnectionAttempts {
+                                // Retry - restart browsing
+                                print("DEBUG: Retrying reconnection (attempt \(self.reconnectionAttempts + 1))...")
+                                self.browser.stopBrowsingForPeers()
+
+                                // Create fresh session
+                                self.session.disconnect()
+                                self.session = MCSession(
+                                    peer: self.peerID,
+                                    securityIdentity: nil,
+                                    encryptionPreference: .none
+                                )
+                                self.session.delegate = self
+
+                                self.reconnectionAttempts += 1
+                                self.discoveredPeers.removeAll()
+                                self.browser.startBrowsingForPeers()
+                            } else {
+                                // Give up after max attempts
+                                print("DEBUG: Reconnection failed after \(self.maxReconnectionAttempts) attempts")
+                                self.connectionState = .disconnected
+                                self.connectedPeerName = nil
+                                self.reconnectionAttempts = 0
+                                self.onConnectionStateChanged?(.disconnected)
+                                self.browser.stopBrowsingForPeers()
+                            }
                         }
                     }
                 }
