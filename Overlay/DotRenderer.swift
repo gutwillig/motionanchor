@@ -8,6 +8,7 @@ struct Particle {
     var velocity: CGPoint
     var opacity: CGFloat
     var edge: Edge  // Which edge this particle belongs to
+    var layer: Int  // 0 = outermost (near edge), higher = closer to center
 
     enum Edge {
         case top, bottom, left, right
@@ -19,7 +20,7 @@ final class DotRenderer: ObservableObject {
 
     // MARK: - Settings
 
-    var particleCount: Int = 30 {
+    var particleCount: Int = 40 {
         didSet {
             if particleCount != oldValue {
                 particles.removeAll()  // Force re-initialization
@@ -41,8 +42,9 @@ final class DotRenderer: ObservableObject {
     private var currentMotion: CGPoint = .zero  // Current motion input
     private var smoothedMotion: CGPoint = .zero  // Smoothed for display
 
-    // Margin where particles live (outer 20% on each side)
-    private let marginPercent: CGFloat = 0.20
+    // Margin where particles live (outer area on each side)
+    private let marginPercent: CGFloat = 0.18  // Particles can exist in outer 18%
+    private let numberOfLayers: Int = 3  // Number of particle layers from edge inward
 
     // MARK: - Public Interface
 
@@ -66,43 +68,75 @@ final class DotRenderer: ObservableObject {
         screenBounds = bounds
         particles.removeAll()
 
-        let particlesPerEdge = particleCount / 4
+        // Calculate particles per layer per edge
+        // Total: particleCount spread across 4 edges × numberOfLayers layers
+        let particlesPerEdgePerLayer = max(3, particleCount / (4 * numberOfLayers))
 
-        // Create particles along each edge
-        for i in 0..<particlesPerEdge {
-            let t = CGFloat(i) / CGFloat(particlesPerEdge)
+        let marginX = bounds.width * marginPercent
+        let marginY = bounds.height * marginPercent
 
-            // Top edge
-            particles.append(Particle(
-                position: CGPoint(x: bounds.minX + t * bounds.width, y: bounds.maxY - 30),
-                velocity: .zero,
-                opacity: maxOpacity * CGFloat.random(in: 0.5...1.0),
-                edge: .top
-            ))
+        // Create particles in layers from edge toward center
+        for layer in 0..<numberOfLayers {
+            // Layer 0 is at the edge, higher layers are more toward center
+            let layerProgress = CGFloat(layer) / CGFloat(numberOfLayers)
+            let layerOffset = layerProgress * marginY * 0.8  // Don't go all the way to margin edge
 
-            // Bottom edge
-            particles.append(Particle(
-                position: CGPoint(x: bounds.minX + t * bounds.width, y: bounds.minY + 30),
-                velocity: .zero,
-                opacity: maxOpacity * CGFloat.random(in: 0.5...1.0),
-                edge: .bottom
-            ))
+            // Opacity decreases for inner layers
+            let layerOpacity = maxOpacity * (1.0 - layerProgress * 0.4)
 
-            // Left edge
-            particles.append(Particle(
-                position: CGPoint(x: bounds.minX + 30, y: bounds.minY + t * bounds.height),
-                velocity: .zero,
-                opacity: maxOpacity * CGFloat.random(in: 0.5...1.0),
-                edge: .left
-            ))
+            for i in 0..<particlesPerEdgePerLayer {
+                let t = CGFloat(i) / CGFloat(particlesPerEdgePerLayer)
+                let randomOffset = CGFloat.random(in: -15...15)
 
-            // Right edge
-            particles.append(Particle(
-                position: CGPoint(x: bounds.maxX - 30, y: bounds.minY + t * bounds.height),
-                velocity: .zero,
-                opacity: maxOpacity * CGFloat.random(in: 0.5...1.0),
-                edge: .right
-            ))
+                // Top edge - particles at various depths from top
+                particles.append(Particle(
+                    position: CGPoint(
+                        x: bounds.minX + t * bounds.width + randomOffset,
+                        y: bounds.maxY - 20 - layerOffset + CGFloat.random(in: -10...10)
+                    ),
+                    velocity: .zero,
+                    opacity: layerOpacity * CGFloat.random(in: 0.6...1.0),
+                    edge: .top,
+                    layer: layer
+                ))
+
+                // Bottom edge
+                particles.append(Particle(
+                    position: CGPoint(
+                        x: bounds.minX + t * bounds.width + randomOffset,
+                        y: bounds.minY + 20 + layerOffset + CGFloat.random(in: -10...10)
+                    ),
+                    velocity: .zero,
+                    opacity: layerOpacity * CGFloat.random(in: 0.6...1.0),
+                    edge: .bottom,
+                    layer: layer
+                ))
+
+                // Left edge
+                let layerOffsetX = layerProgress * marginX * 0.8
+                particles.append(Particle(
+                    position: CGPoint(
+                        x: bounds.minX + 20 + layerOffsetX + CGFloat.random(in: -10...10),
+                        y: bounds.minY + t * bounds.height + randomOffset
+                    ),
+                    velocity: .zero,
+                    opacity: layerOpacity * CGFloat.random(in: 0.6...1.0),
+                    edge: .left,
+                    layer: layer
+                ))
+
+                // Right edge
+                particles.append(Particle(
+                    position: CGPoint(
+                        x: bounds.maxX - 20 - layerOffsetX + CGFloat.random(in: -10...10),
+                        y: bounds.minY + t * bounds.height + randomOffset
+                    ),
+                    velocity: .zero,
+                    opacity: layerOpacity * CGFloat.random(in: 0.6...1.0),
+                    edge: .right,
+                    layer: layer
+                ))
+            }
         }
     }
 
@@ -192,30 +226,41 @@ final class DotRenderer: ObservableObject {
 
     private func respawnParticle(_ particle: Particle) -> Particle {
         var p = particle
-        p.velocity = .zero
-        p.opacity = maxOpacity * CGFloat.random(in: 0.5...1.0)
 
-        let margin: CGFloat = 30
+        // Calculate layer offset based on particle's layer
+        let layerProgress = CGFloat(p.layer) / CGFloat(numberOfLayers)
+        let marginX = screenBounds.width * marginPercent
+        let marginY = screenBounds.height * marginPercent
+
+        p.velocity = .zero
+        let layerOpacity = maxOpacity * (1.0 - layerProgress * 0.4)
+        p.opacity = layerOpacity * CGFloat.random(in: 0.6...1.0)
+
+        let baseMargin: CGFloat = 20
 
         switch p.edge {
         case .top:
+            let layerOffset = layerProgress * marginY * 0.8
             p.position = CGPoint(
                 x: CGFloat.random(in: screenBounds.minX...screenBounds.maxX),
-                y: screenBounds.maxY - margin + CGFloat.random(in: -10...10)
+                y: screenBounds.maxY - baseMargin - layerOffset + CGFloat.random(in: -10...10)
             )
         case .bottom:
+            let layerOffset = layerProgress * marginY * 0.8
             p.position = CGPoint(
                 x: CGFloat.random(in: screenBounds.minX...screenBounds.maxX),
-                y: screenBounds.minY + margin + CGFloat.random(in: -10...10)
+                y: screenBounds.minY + baseMargin + layerOffset + CGFloat.random(in: -10...10)
             )
         case .left:
+            let layerOffset = layerProgress * marginX * 0.8
             p.position = CGPoint(
-                x: screenBounds.minX + margin + CGFloat.random(in: -10...10),
+                x: screenBounds.minX + baseMargin + layerOffset + CGFloat.random(in: -10...10),
                 y: CGFloat.random(in: screenBounds.minY...screenBounds.maxY)
             )
         case .right:
+            let layerOffset = layerProgress * marginX * 0.8
             p.position = CGPoint(
-                x: screenBounds.maxX - margin + CGFloat.random(in: -10...10),
+                x: screenBounds.maxX - baseMargin - layerOffset + CGFloat.random(in: -10...10),
                 y: CGFloat.random(in: screenBounds.minY...screenBounds.maxY)
             )
         }

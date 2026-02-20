@@ -140,6 +140,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     private var statusText: String {
         guard let state = appState?.connectionManager.connectionState else { return "Not Connected" }
+
+        // Check for stale stream
+        if appState?.connectionManager.isStreamStale == true {
+            return "⚠️ Stream stalled - reconnecting..."
+        }
+
         switch state {
         case .disconnected: return "● Not Connected"
         case .searching: return "● Searching..."

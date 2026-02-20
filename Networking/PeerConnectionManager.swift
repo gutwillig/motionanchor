@@ -14,6 +14,7 @@ final class PeerConnectionManager: NSObject, ObservableObject {
     @Published var connectedPeerName: String?
     @Published var latestError: String?
     @Published var packetsReceived: Int = 0
+    @Published var isStreamStale: Bool = false
 
     // MARK: - Private Properties
 
@@ -32,6 +33,11 @@ final class PeerConnectionManager: NSObject, ObservableObject {
     // Reconnection tracking
     private var reconnectionAttempts = 0
     private let maxReconnectionAttempts = 3
+
+    // Stale stream detection
+    private var lastPacketTime: Date = Date()
+    private var staleStreamTimer: Timer?
+    private let staleStreamThreshold: TimeInterval = 5.0  // 5 seconds without data = stale
 
     // Callbacks
     var onMotionPacketReceived: ((MotionPacket) -> Void)?
@@ -148,6 +154,7 @@ final class PeerConnectionManager: NSObject, ObservableObject {
 
     /// Disconnect from current session
     func disconnect() {
+        stopStaleStreamMonitoring()
         inputStream?.close()
         inputStream = nil
         streamBuffer.removeAll()
@@ -373,6 +380,10 @@ extension PeerConnectionManager: MCSessionDelegate {
                             lastCallbackTime = now
                             DispatchQueue.main.async { [weak self] in
                                 self?.packetsReceived = packetCount
+                                self?.lastPacketTime = Date()
+                                if self?.isStreamStale == true {
+                                    self?.isStreamStale = false
+                                }
                                 self?.onMotionPacketReceived?(packet)
                             }
                         }
@@ -391,7 +402,70 @@ extension PeerConnectionManager: MCSessionDelegate {
         DispatchQueue.main.async {
             self.connectionState = .streaming
             self.onConnectionStateChanged?(.streaming)
+            self.lastPacketTime = Date()
+            self.startStaleStreamMonitoring()
         }
+    }
+
+    // MARK: - Stale Stream Detection
+
+    private func startStaleStreamMonitoring() {
+        staleStreamTimer?.invalidate()
+        staleStreamTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { [weak self] _ in
+            self?.checkForStaleStream()
+        }
+    }
+
+    private func stopStaleStreamMonitoring() {
+        staleStreamTimer?.invalidate()
+        staleStreamTimer = nil
+        isStreamStale = false
+    }
+
+    private func checkForStaleStream() {
+        guard connectionState == .streaming else { return }
+
+        let timeSinceLastPacket = Date().timeIntervalSince(lastPacketTime)
+        if timeSinceLastPacket > staleStreamThreshold {
+            print("DEBUG: Stream stale - no packets for \(Int(timeSinceLastPacket)) seconds")
+
+            if !isStreamStale {
+                isStreamStale = true
+
+                // Attempt to restart the stream by triggering reconnection
+                print("DEBUG: Attempting to restart stale stream...")
+                restartStaleStream()
+            }
+        }
+    }
+
+    private func restartStaleStream() {
+        // Stop monitoring during restart
+        stopStaleStreamMonitoring()
+
+        // Close the current stream
+        inputStream?.close()
+        inputStream = nil
+        streamBuffer.removeAll()
+
+        // Trigger a reconnection
+        connectionState = .reconnecting
+        onConnectionStateChanged?(.reconnecting)
+
+        // Create fresh session
+        session.disconnect()
+        session = MCSession(
+            peer: peerID,
+            securityIdentity: nil,
+            encryptionPreference: .none
+        )
+        session.delegate = self
+
+        // Start browsing to reconnect
+        reconnectionAttempts = 0
+        discoveredPeers.removeAll()
+        browser.stopBrowsingForPeers()
+        browser.startBrowsingForPeers()
     }
 
     /// Parse a single motion packet from stream data (called on background thread)
